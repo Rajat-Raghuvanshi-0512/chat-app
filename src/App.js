@@ -16,7 +16,7 @@ function App() {
 
         {/* Protected Routes  */}
         <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<Home />} />
+          <Route path="*" element={<Home />} />
         </Route>
       </Routes>
     </>

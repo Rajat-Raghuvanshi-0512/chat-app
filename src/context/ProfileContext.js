@@ -1,4 +1,4 @@
-import { onValue, ref, off } from 'firebase/database'
+import { onValue, ref } from 'firebase/database'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { auth, database } from '../misc/firebase'
 
@@ -19,10 +19,11 @@ const ProfileProvider = ({ children }) => {
             }
             const dbref = ref(database, `/profiles/${authObj.uid}`);
             userUnsub = onValue(dbref, snapshot => {
-                const { name, createdAt } = snapshot.val()
+                const { name, createdAt, avatar } = snapshot.val()
                 const data = {
                     name,
                     createdAt,
+                    avatar,
                     email: authObj.email,
                     photoUrl: authObj.photoURL,
                     uid: authObj.uid,

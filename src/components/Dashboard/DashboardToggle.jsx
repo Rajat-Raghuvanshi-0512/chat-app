@@ -5,6 +5,7 @@ import { database } from '../../misc/firebase'
 import EditableInput from '../EditableInput'
 import { toast } from "react-toastify"
 import ProviderBlock from './ProviderBlock'
+import AvatarUploadBtn from './AvatarUploadBtn'
 
 const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
     const { profile } = useProfile()
@@ -23,9 +24,9 @@ const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
 
     }
     return (
-        <div className={`${isOpen ? "translate-x-0" : "-translate-x-full"} overflow-y-auto overflow-x-hidden fixed top-0 left-0 z-50 md:inset-0 h-screen md:h-screen transition-all duration-700 w-full sm:w-2/3 md:max-w-lg`}>
+        <div className={`${isOpen ? "translate-x-0" : "-translate-x-full"} fixed top-0 left-0 z-50  h-screen md:h-screen transition-all duration-700 w-full sm:w-2/3 md:max-w-lg`}>
             <div className="relative w-full h-full md:h-auto">
-                <div className="relative bg-white h-screen shadow dark:bg-gray-700">
+                <div className="relative bg-gray-100 h-screen shadow dark:bg-gray-700">
                     <div className="flex justify-between items-center p-5 rounded-t border-b dark:border-gray-600">
                         <h3 className="text-2xl font-medium text-gray-900 dark:text-white">
                             Dashboard
@@ -44,6 +45,10 @@ const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
                             id="name"
                         />
                     </div>
+                    <div className='flex items-center justify-center mb-5 '>
+                        <img src={profile.avatar} alt="" className='w-[150px] rounded-full' />
+                    </div>
+                    <AvatarUploadBtn />
                     <div className="flex justify-center md:justify-end p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600 w-full absolute bottom-1">
                         <button
                             type="button"
