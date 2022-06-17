@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useCurrentRoom } from '../../../../context/CurrentRoomContext'
 import Modal from '../../../Modal'
 
@@ -18,4 +18,4 @@ const RoomInfoModal = ({ isOpen, closeModal }) => {
     )
 }
 
-export default RoomInfoModal
+export default memo(RoomInfoModal)

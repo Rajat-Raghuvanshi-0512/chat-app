@@ -10,10 +10,17 @@ const ChatRoomItem = ({ room }) => {
             className={`${location.pathname === `/room/${room.id}` ? "border-cyan-500  border-l-4  bg-gray-200 " : ""} grid grid-cols-4 mb-3 mx-3 p-2 hover:bg-gray-200 rounded dark:bg-gray-400`}>
             <div className='col-span-3'>
                 <h4 className='font-bold text-xl text-slate-700 dark:text-wh w-52 overflow-hidden text-clip'>{room.chatname}</h4>
-                <p className='text-sm text-slate-500'>{room.desc.length > 30 ? `${room.desc.slice(0, 30)}...` : room.desc}</p>
+                <p className='text-sm text-slate-500'>
+                    {room.lastMessage
+                        ?
+                        room.lastMessage.length > 30 ? `${room.lastMessage.slice(0, 30)}...` : room.lastMessage
+                        :
+                        "No messages yet"
+                    }
+                </p>
             </div>
             <div className='text-[0.55rem] text-slate-600 text-right'>
-                <Moment fromNow >{room.createdAt}</Moment>
+                <Moment fromNow >{room.lastMessageAt ? room.lastMessageAt : room.createdAt}</Moment>
             </div>
         </Link>
     )

@@ -33,14 +33,14 @@ const Chat = () => {
     }
     return (
         <CurrentRoomProvider data={roomData}>
-            <div className='relative h-screen px-2'>
+            <div className='relative h-screen'>
                 <div>
                     <ChatTop />
                 </div>
                 <div>
                     <ChatMiddle />
                 </div>
-                <div className='absolute bottom-0'>
+                <div className='absolute bottom-0 w-full'>
                     <ChatBottom />
                 </div>
             </div>
