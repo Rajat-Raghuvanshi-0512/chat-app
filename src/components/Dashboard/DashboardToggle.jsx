@@ -46,10 +46,10 @@ const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
                         />
                     </div>
                     <div className='flex items-center justify-center mb-5 '>
-                        <img src={profile.avatar} alt="" className='w-[150px] rounded-full' />
+                        <img src={profile.avatar} alt="" className='w-[110px] rounded-full' />
                     </div>
                     <AvatarUploadBtn />
-                    <div className="flex justify-center md:justify-end p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600 w-full absolute bottom-1">
+                    <div className="flex justify-center md:justify-end p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600 w-full mt-4">
                         <button
                             type="button"
                             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"

@@ -4,8 +4,9 @@ import ChatRoomItem from './ChatRoomItem'
 
 const ChatRoomList = ({ upperElHeight }) => {
     const { rooms } = useRooms()
+
     return (
-        <div className='overflow-y-auto small-scroll pt-3' style={{ height: `calc(100% - ${upperElHeight}px)` }} >
+        <div className='overflow-y-auto small-scroll pt-5' style={{ height: `calc(100% - ${upperElHeight}px)` }} >
             {
                 rooms.map((room) => (
                     <ChatRoomItem key={room.id} room={room} />
