@@ -1,5 +1,5 @@
 import { push, ref, serverTimestamp, update } from 'firebase/database'
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { RiSendPlaneFill } from "react-icons/ri"
 import { useParams } from 'react-router-dom'
 import { useProfile } from '../../../context/ProfileContext'
@@ -15,6 +15,7 @@ const assembleMessage = (profile, chatId) => {
             createdAt: profile.createdAt,
             ...(profile.avatar ? { avatar: profile.avatar } : {})
         },
+        likesCount: 0,
         createdAt: serverTimestamp()
     }
 }
@@ -68,7 +69,7 @@ const Bottom = () => {
                 onKeyDown={onKeyDown}
             />
             <button
-                className='bg-sky-500 hover:bg-sky-700 rounded-r px-5 disabled:bg-slate-300'
+                className='bg-sky-500 hover:bg-sky-700 rounded-r px-5 disabled:bg-slate-300 -translate-x-1 sm:translate-x-0'
                 onClick={sendMessage}
                 disabled={loading}
             >
@@ -78,4 +79,4 @@ const Bottom = () => {
     )
 }
 
-export default Bottom
+export default memo(Bottom)

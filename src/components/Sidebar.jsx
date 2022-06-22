@@ -23,7 +23,7 @@ const SideBar = () => {
                     <CreateChatRoomBtn />
                 </div>
                 <div className="heading py-3 border-y-2">
-                    <h1 className='text-center font-bold opacity-50 uppercase dark:text-slate-50'>Join conversation</h1>
+                    <h1 className='text-center font-bold opacity-90 uppercase dark:text-slate-50'>Join conversation</h1>
                 </div>
             </section>
             <ChatRoomList upperElHeight={height} />

@@ -5,8 +5,8 @@ const Modal = ({ children, isOpen, closeModal, submitText, onClick, title, close
 
     return (
         <>
-            <div className={`${!isOpen && " scale-0"} fixed w-full top-0 left-0 h-screen z-10 select-none`}>
-                <div className="relative max-w-sm h-auto shadow bg-slate-100 rounded-lg dark:bg-gray-700 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] ease-out scale-100">
+            <div className={`${!isOpen && "scale-0"} fixed w-screen top-0 left-0 h-screen z-50 select-none bg-black bg-opacity-20`} >
+                <div className="relative max-w-sm h-auto shadow bg-slate-100 rounded-lg dark:bg-gray-900 top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] ease-out scale-100">
                     <div className="p-4 rounded-t border-b dark:border-gray-600">
                         <h3 className="text-2xl text-center font-semibold text-gray-900 dark:text-white">
                             {title}

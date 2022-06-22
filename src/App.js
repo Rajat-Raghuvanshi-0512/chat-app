@@ -1,10 +1,16 @@
 import React from "react";
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom"
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 function App() {
+  useEffect(() => {
+    localStorage.getItem("mode") === "dark" ?
+      document.body.classList = "dark" :
+      document.body.classList = ""
+  }, [])
   return (
     <>
       <Routes>

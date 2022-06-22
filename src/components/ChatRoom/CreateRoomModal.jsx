@@ -1,4 +1,5 @@
 import { push, ref, serverTimestamp } from 'firebase/database'
+import { auth } from '../../misc/firebase'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { database } from '../../misc/firebase'
@@ -23,8 +24,12 @@ const CreateRoomModal = ({ isOpen, closeModal }) => {
         e.preventDefault()
         const newRoomdata = {
             ...formData,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            admins: {
+                [auth.currentUser.uid]: true
+            }
         }
+
         try {
             const DBRef = ref(database, "rooms")
             await push(DBRef, newRoomdata)

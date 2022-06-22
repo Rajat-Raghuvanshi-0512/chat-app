@@ -10,16 +10,16 @@ const Home = () => {
     const isMobile = useMediaQuery("(max-width: 639px)")
     return (
         <RoomsProvider>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-4">
-                <div className={`${pathname !== "/" && "hidden"} sm:block md:col-span-2 lg:col-span-1 h-screen bg-slate-50 dark:bg-slate-700`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-4 overflow-hidden">
+                <div className={`${pathname !== "/" && "hidden"} sm:block md:col-span-2 lg:col-span-1 h-screen bg-slate-50 dark:bg-slate-800 dark:border-r border-gray-900 px-3`}>
                     <Sidebar />
                 </div>
                 <div className={`md:col-span-3 lg:col-span-3`}>
                     {
                         pathname === "/" && !isMobile ?
-                            <div className=' flex h-screen items-center justify-center flex-col'>
-                                <IoChatbubblesSharp className='w-14 h-14 text-gray-700' />
-                                <h5 className='text-center w-full text-2xl font-bold uppercase text-gray-700 drop-shadow'>Please select a Chatroom</h5>
+                            <div className=' flex h-screen items-center justify-center flex-col dark:bg-gray-700'>
+                                <IoChatbubblesSharp className='w-14 h-14 text-gray-700 dark:text-slate-300' />
+                                <h5 className='text-center w-full text-2xl font-bold uppercase text-gray-700 dark:text-slate-300 drop-shadow'>Please select a Chatroom</h5>
                             </div>
                             :
                             pathname.startsWith("/room") &&

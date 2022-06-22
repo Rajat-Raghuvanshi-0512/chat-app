@@ -1,4 +1,4 @@
-import * as firebase from "firebase/app"
+import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
 import { getDatabase } from "firebase/database";
 import { getStorage } from "firebase/storage"
@@ -14,7 +14,7 @@ const config = {
     databaseURL: "https://chat-app-c8964-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-const app = firebase.initializeApp(config);
+const app = initializeApp(config);
 
 export const auth = getAuth(app)
 

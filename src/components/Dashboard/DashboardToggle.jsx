@@ -1,64 +1,74 @@
-import { child, ref, set } from 'firebase/database'
-import React, { useState } from 'react'
+import { ref, update } from 'firebase/database'
+import React, { useState, useEffect } from 'react'
 import { useProfile } from '../../context/ProfileContext'
 import { database } from '../../misc/firebase'
 import EditableInput from '../EditableInput'
 import { toast } from "react-toastify"
 import ProviderBlock from './ProviderBlock'
 import AvatarUploadBtn from './AvatarUploadBtn'
+import { MdLightMode, MdDarkMode } from "react-icons/md"
+import { getUserUpdates } from '../../misc/helpers'
+import Drawer from '../Drawer'
 
 const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
     const { profile } = useProfile()
-    const [isEditing, setIsEditing] = useState(false);
+    const [checked, setChecked] = useState(() => {
+        return localStorage.getItem("mode") === "dark" ? true : false
+    })
 
     const onSave = async (newdata) => {
-        const databaseRef = ref(database, `/profiles/${profile.uid}`)
-        const childPathRef = child(databaseRef, 'name')
-        setIsEditing(false);
         try {
-            await set(childPathRef, newdata)
+            const updates = getUserUpdates(profile.uid, 'name', newdata, database)
+            await update(ref(database), updates)
             toast.success('Saved successfully')
         } catch (error) {
-            toast.success(error.message)
+            console.log(error);
+            toast.error(error.message)
         }
 
     }
+    useEffect(() => {
+        if (checked) {
+            document.body.className = "dark"
+            localStorage.setItem("mode", "dark")
+        } else {
+            document.body.className = ""
+            localStorage.setItem("mode", "light")
+        }
+    }, [checked])
     return (
-        <div className={`${isOpen ? "translate-x-0" : "-translate-x-full"} fixed top-0 left-0 z-50  h-screen md:h-screen transition-all duration-700 w-full sm:w-2/3 md:max-w-lg`}>
-            <div className="relative w-full h-full md:h-auto">
-                <div className="relative bg-gray-100 h-screen shadow dark:bg-gray-700">
-                    <div className="flex justify-between items-center p-5 rounded-t border-b dark:border-gray-600">
-                        <h3 className="text-2xl font-medium text-gray-900 dark:text-white">
-                            Dashboard
-                        </h3>
-                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" onClick={closeModal}>
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                        </button>
-                    </div>
-                    <div className="p-6 space-y-6">
-                        <ProviderBlock />
-                        <EditableInput
-                            initialValue={profile.name}
-                            onSave={onSave}
-                            isEditing={isEditing}
-                            setIsEditing={setIsEditing}
-                            id="name"
-                        />
-                    </div>
-                    <div className='flex items-center justify-center mb-5 '>
-                        <img src={profile.avatar} alt="" className='w-[110px] rounded-full' />
-                    </div>
-                    <AvatarUploadBtn />
-                    <div className="flex justify-center md:justify-end p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600 w-full mt-4">
-                        <button
-                            type="button"
-                            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"
-                            onClick={onSignOut}
-                        >Logout</button>
-                    </div>
-                </div>
+        <Drawer isOpen={isOpen} onClose={closeModal} left title={"Dashboard"}>
+            <div className="p-6 space-y-6">
+                <ProviderBlock />
+                <EditableInput
+                    initialValue={profile.name}
+                    onSave={onSave}
+                    id="name"
+                />
             </div>
-        </div>
+            <div className='my-16 sm:m-0'>
+                <div className='flex items-center justify-center mb-5 '>
+                    <img src={profile.avatar} alt="" className='w-[150px] sm:w-[110px] rounded-full' />
+                </div>
+                <AvatarUploadBtn />
+            </div>
+            <div className="flex justify-between items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600 w-full mt-4 sm:absolute bottom-0">
+                <div className='flex items-center gap-2'>
+                    <label className="switch">
+                        <input type="checkbox" className='input-checkbox' checked={checked} onChange={() => setChecked(!checked)} />
+                        <span className="slider round"></span>
+                    </label>
+                    {
+                        checked ? <MdDarkMode className='w-6 h-6 text-white' /> : <MdLightMode className='w-6 h-6 text-gray-700' />
+                    }
+                </div>
+                <button
+                    type="button"
+                    className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"
+                    onClick={onSignOut}
+                >Logout</button>
+            </div>
+        </Drawer>
     )
 }
 
