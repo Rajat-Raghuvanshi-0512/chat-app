@@ -13,7 +13,6 @@ import { auth } from '../../misc/firebase'
 const Chat = () => {
     const { roomId } = useParams()
     const { rooms } = useRooms()
-    console.log(auth);
 
     if (!rooms) {
         return <Loader />
