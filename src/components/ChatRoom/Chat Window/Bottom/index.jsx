@@ -1,13 +1,13 @@
 import { push, ref, serverTimestamp, update } from 'firebase/database'
 import React, { useState, memo } from 'react'
 import { RiSendPlaneFill } from "react-icons/ri"
-import { BsMicFill } from "react-icons/bs"
 import { useParams } from 'react-router-dom'
 import { useProfile } from '../../../../context/ProfileContext'
 import { database } from '../../../../misc/firebase'
 import { toast } from "react-toastify"
 import UploadFileModal from './UploadFileBtnModal'
 import { useCallback } from 'react'
+import AudioBtn from './AudioBtn'
 
 const assembleMessage = (profile, chatId) => {
     return {
@@ -87,7 +87,7 @@ const Bottom = () => {
     return (
         <div className='flex w-full p-4'>
             <div className='flex items-center w-full border-[1.5px] border-r-0 rounded-l bg-white'>
-                <BsMicFill className='w-5 h-5 ml-2 cursor-pointer text-slate-700' />
+                <AudioBtn afterUpload={afterUpload} />
                 <UploadFileModal afterUpload={afterUpload} />
                 <input
                     type="text"

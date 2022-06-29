@@ -4,11 +4,15 @@ import { auth } from '../../../../misc/firebase';
 import Avatar from '../../../Avatar';
 import UserInfoBtn from './UserInfoBtn';
 import { BsHeartFill } from "react-icons/bs"
-import { useHover, usePresence } from '../../../../misc/custom-hooks';
+import { useHover, useModal, usePresence } from '../../../../misc/custom-hooks';
 import { useCurrentRoom } from '../../../../context/CurrentRoomContext';
 import { ImCross } from "react-icons/im"
 import Modal from '../../../Modal';
+import { useRef } from 'react';
 const MessageItem = ({ msg, handleLike, handleDelete }) => {
+
+    const { isOpen, openModal, closeModal } = useModal()
+    const imgRef = useRef()
 
     const { message, file, user, likes, likesCount, createdAt } = msg;
     const [ref, onHover] = useHover()
@@ -23,17 +27,28 @@ const MessageItem = ({ msg, handleLike, handleDelete }) => {
     const canGrantAdmin = !isCurrentUserMsg && isAdmin
 
     const renderFile = (file) => {
-        // console.log(file);
         if (file.contentType.includes("image")) {
             return <>
-                <img src={file.url} alt="pic" className='w-[20vw]' />
-                <Modal>
-
+                <img src={file.url} alt=" __FAILED TO UPLOAD__" className='w-[20vw] cursor-pointer' onClick={openModal} />
+                <Modal isOpen={isOpen} closeModal={closeModal} submitText={"Download"} title={file.name} closeText={"Close"} onClick={() => imgRef.current.click()}>
+                    <div className='grid place-items-center'>
+                        <img src={file.url} alt=" __FAILED TO UPLOAD__" className='max-h-[50vh]' />
+                        <a href={file.url} className="hidden" ref={imgRef} download rel='noopener noreferrer' target="_blank"> Download {file.name}</a>
+                    </div>
                 </Modal>
             </>
 
         }
-        return <a href={file.url} className="text-slate-500">Download <span className="text-blue-600">{file.name}</span></a>
+        if (file.contentType.includes("audio")) {
+            return <>
+                <audio controls>
+                    <source src={file.url} type="audio/mp3" className='bg-gray-500' />
+                    Your browser doesnot support audio element.
+                </audio>
+            </>
+
+        }
+        return <a href={file.url} className="text-slate-500 dark:text-white">Download <span className="text-blue-600">{file.name}</span></a>
     }
 
     return (
@@ -51,7 +66,7 @@ const MessageItem = ({ msg, handleLike, handleDelete }) => {
                 }
                 {
                     isCurrentUserMsg &&
-                    <div className='absolute right-0 cursor-pointer' onClick={() => handleDelete(msg.id)}>
+                    <div className='absolute right-0 cursor-pointer' onClick={() => handleDelete(msg.id, file)}>
                         <ImCross className='w-2 h-2' />
                     </div>
                 }

@@ -9,10 +9,10 @@ import { ImCross } from 'react-icons/im'
 import { toast } from "react-toastify"
 import { useRef } from 'react'
 
-// const shouldScrollToBottom = (node, threshold = 30) => {
-//     const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0
-//     return percentage > threshold
-// }
+const shouldScrollToBottom = (node, threshold = 30) => {
+    const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0
+    return percentage > threshold
+}
 
 const Middle = () => {
     const { roomId } = useParams()
@@ -39,16 +39,12 @@ const Middle = () => {
         })
     }
 
-    const handleDelete = async (msgId) => {
+    const handleDelete = async (msgId, file) => {
 
         const isLast = messages[messages.length - 1].id === msgId
-        const isFile = Boolean(messages[messages.length - 1].file)
         const updates = {};
         updates[`/messages/${msgId}`] = null;
-        if (isFile) {
-            const imgRef = storageRef(storage, `/chat/${roomId}/${messages[messages.length - 1].file.imgId}`)
-            await deleteObject(imgRef)
-        }
+
         if (isLast && messages.length > 1) {
             updates[`/rooms/${roomId}/lastMessage`] = messages[messages.length - 2].message || messages[messages.length - 2].file.name
             updates[`/rooms/${roomId}/lastMessageAt`] = messages[messages.length - 2].createdAt
@@ -56,10 +52,18 @@ const Middle = () => {
         if (isLast && messages.length === 1) {
             updates[`/rooms/${roomId}/lastMessage`] = null;
         }
+        if (file) {
+            try {
+                const imgRef = storageRef(storage, `/chat/${roomId}/${file.id}`)
+                await deleteObject(imgRef)
+            } catch (error) {
+                toast.error(error.message)
+            }
+        }
         try {
             await update(ref(database), updates)
         } catch (error) {
-            toast.error(error)
+            toast.error(error.message)
         }
     }
 
@@ -68,9 +72,9 @@ const Middle = () => {
 
         const unsub = onValue(msgRef, snap => {
             setMessages(transformToArray(snap.val()))
-            // if (shouldScrollToBottom(node)) {
-            //     node.scrollTop = node.scrollHeight;
-            // }
+            if (shouldScrollToBottom(node, 10)) {
+                node.scrollTop = node.scrollHeight;
+            }
         })
         setTimeout(() => {
             node.scrollTop = node.scrollHeight;
