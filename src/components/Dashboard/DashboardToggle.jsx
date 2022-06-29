@@ -22,7 +22,6 @@ const DashboardToggle = ({ isOpen, closeModal, onSignOut }) => {
             await update(ref(database), updates)
             toast.success('Saved successfully')
         } catch (error) {
-            console.log(error);
             toast.error(error.message)
         }
 

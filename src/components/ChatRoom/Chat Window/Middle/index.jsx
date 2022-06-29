@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { equalTo, onValue, orderByChild, query, ref, runTransaction, update } from "firebase/database"
-import { auth, database } from "../../../../misc/firebase"
+import { deleteObject, ref as storageRef } from 'firebase/storage'
+import { auth, database, storage } from "../../../../misc/firebase"
 import { useParams } from 'react-router-dom'
 import { groupBy, transformToArray } from "../../../../misc/helpers"
 import MessageItem from './MessageItem'
@@ -8,17 +9,16 @@ import { ImCross } from 'react-icons/im'
 import { toast } from "react-toastify"
 import { useRef } from 'react'
 
-const shouldScrollToBottom = (node, threshold = 30) => {
-    const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0
-    return percentage > threshold
-}
+// const shouldScrollToBottom = (node, threshold = 30) => {
+//     const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0
+//     return percentage > threshold
+// }
 
 const Middle = () => {
     const { roomId } = useParams()
     const [messages, setMessages] = useState(null)
     const selfRef = useRef()
     const node = selfRef.current;
-    console.log(selfRef.value);
 
     const isChatEmpty = messages && messages.length === 0;
     const canShowMsgs = messages && messages.length > 0;
@@ -42,16 +42,20 @@ const Middle = () => {
     const handleDelete = async (msgId) => {
 
         const isLast = messages[messages.length - 1].id === msgId
+        const isFile = Boolean(messages[messages.length - 1].file)
         const updates = {};
         updates[`/messages/${msgId}`] = null;
+        if (isFile) {
+            const imgRef = storageRef(storage, `/chat/${roomId}/${messages[messages.length - 1].file.imgId}`)
+            await deleteObject(imgRef)
+        }
         if (isLast && messages.length > 1) {
-            updates[`/rooms/${roomId}/lastMessage`] = messages[messages.length - 2].message
+            updates[`/rooms/${roomId}/lastMessage`] = messages[messages.length - 2].message || messages[messages.length - 2].file.name
             updates[`/rooms/${roomId}/lastMessageAt`] = messages[messages.length - 2].createdAt
         }
         if (isLast && messages.length === 1) {
             updates[`/rooms/${roomId}/lastMessage`] = null;
         }
-        console.log(updates);
         try {
             await update(ref(database), updates)
         } catch (error) {
@@ -64,9 +68,9 @@ const Middle = () => {
 
         const unsub = onValue(msgRef, snap => {
             setMessages(transformToArray(snap.val()))
-            if (shouldScrollToBottom(node)) {
-                node.scrollTop = node.scrollHeight;
-            }
+            // if (shouldScrollToBottom(node)) {
+            //     node.scrollTop = node.scrollHeight;
+            // }
         })
         setTimeout(() => {
             node.scrollTop = node.scrollHeight;
