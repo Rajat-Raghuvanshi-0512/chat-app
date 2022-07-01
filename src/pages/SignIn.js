@@ -30,7 +30,7 @@ const SignIn = () => {
         signInWithProvider(new GithubAuthProvider())
     }
     return (
-        <div className='flex flex-col justify-center items-center h-screen w-screen'>
+        <div className='flex flex-col justify-center items-center h-screen w-screen dark:bg-slate-700 dark:text-slate-100'>
             <h1 className='text-center text-3xl sm:text-4xl md:text-5xl font-bold'>Welcome to Chat App</h1>
             <p className='text-center text-md sm:text-xl md:text-2xl  py-14'>Progressive chat platform for everyone.</p>
             <div className='flex flex-col sm:flex-row gap-4'>

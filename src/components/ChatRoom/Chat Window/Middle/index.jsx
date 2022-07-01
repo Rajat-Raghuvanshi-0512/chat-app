@@ -9,16 +9,10 @@ import { ImCross } from 'react-icons/im'
 import { toast } from "react-toastify"
 import { useRef } from 'react'
 
-const shouldScrollToBottom = (node, threshold = 30) => {
-    const percentage = (100 * node.scrollTop) / (node.scrollHeight - node.clientHeight) || 0
-    return percentage > threshold
-}
-
 const Middle = () => {
     const { roomId } = useParams()
     const [messages, setMessages] = useState(null)
     const selfRef = useRef()
-    const node = selfRef.current;
 
     const isChatEmpty = messages && messages.length === 0;
     const canShowMsgs = messages && messages.length > 0;
@@ -72,18 +66,14 @@ const Middle = () => {
 
         const unsub = onValue(msgRef, snap => {
             setMessages(transformToArray(snap.val()))
-            if (shouldScrollToBottom(node, 10)) {
-                node.scrollTop = node.scrollHeight;
-            }
+            selfRef.current.scrollIntoView({ behavior: 'smooth' })
         })
-        setTimeout(() => {
-            node.scrollTop = node.scrollHeight;
-        }, 500);
 
         return () => {
             unsub()
         }
-    }, [roomId, node])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [roomId, selfRef.current])
 
     const renderMsgs = () => {
         const groups = groupBy(messages, (msgItem) => {
@@ -102,7 +92,7 @@ const Middle = () => {
 
     return (
         <>
-            <ul className='overflow-y-auto small-scroll px-4 h-full' ref={selfRef}>
+            <ul className='overflow-y-auto small-scroll px-4 h-full'>
                 {isChatEmpty && <li className='flex flex-col gap-3 items-center justify-center h-full'>
                     <ImCross className='text-3xl' />
                     <h5 className='text-center text-2xl font-bold uppercase drop-shadow'>No Messages Yet...</h5>
@@ -110,6 +100,7 @@ const Middle = () => {
                 {
                     canShowMsgs && renderMsgs()
                 }
+                <div ref={selfRef} className="py-1"></div>
             </ul>
         </>
     )
